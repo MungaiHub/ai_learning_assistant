@@ -44,3 +44,25 @@ EtractedText: {
             },
         },
     ],
+    uploadDate: {
+        type: Date,
+        default: Date.now,
+}, 
+lastAccessed: {
+    type: Date,
+    default: Date.now,
+},
+status: {
+    type: String,
+    enum: ['processsing', 'ready', 'failed'],
+    default: "processing"
+},
+}
+)
+
+//  Index for faster querries
+documentSchema.index({userId: 1, uploadDate: -1});
+
+const Document = mongoose.model("Document", documentSchema);
+
+export default Document;
