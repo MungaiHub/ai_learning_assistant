@@ -48,3 +48,61 @@ export const register = async (req, res, next) => {
     next(error)
   }
 }
+
+// @desc    Login user
+// @route   POST /api/auth/login
+// @access  Public
+export const login = async (req, res, next) => {
+  try {
+    const { email, password } = req.body
+
+    //Validate input
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        error: 'Please provide email and password',
+        statusCode: 400,
+      })
+    }
+    //check for user (include password for comparison)
+    const user = await User.findOne({ email }).select('+password')
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        error: 'Invalid email or password',
+        statusCode: 401,
+      })
+    }
+
+    //check password
+    const isMatch = await user.matchPassword(password)
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        error: 'Invalid email or password',
+        statusCode: 401,
+      })
+    }
+
+    //generate token
+    const token = generateToken(user._id)
+
+    res.status(200).json({
+      success: true,
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        profileImage: user.profileImage,
+        createdAt: user.createdAt,
+      },
+      token,
+      message: 'Login successful',
+      statusCode: 200,
+    })
+
+  } catch (error) {
+    next(error)
+  }
+}
