@@ -13,3 +13,11 @@ const router = express.Router()
 
 //All routes are protected
 router.use(protect)
+
+router.post('/upload', upload.single('document'), uploadDocument)
+router.get('/', getDocuments)
+router.get('/:id', getDocument)
+router.delete('/:id', deleteDocument)
+router.put('/:id', updateDocument)
+
+export default router
