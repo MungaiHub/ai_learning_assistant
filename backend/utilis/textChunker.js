@@ -101,3 +101,91 @@ export const chunkText = (text, chunkSize = 500, overlap = 50) => {
     return chunks;
 
 };
+
+/**
+ * Find relevant chunks based on keyword matching
+ * @param {Array<Object>} chunks - Array of chunk objects with content
+ * @param {string} query - search query
+ *  @param {number} maxChunks - Maximum number of relevant chunks to return
+ * @returns {Array<Object>} - Array of relevant chunk objects
+ * 
+ */
+export const findRelevantChunks = (chunks, query, maxChunks = 3) => {
+    if (!chunks || chunks.length === 0 || !query) {
+        return [];
+    }
+
+    //common stop words to exclude
+    const stopWords = new Set([
+        'the', 'is', 'which', 'on', 'a', 'an', 'and', 'or', 'but', 'in',
+        'with', 'to', 'of', 'for', 'as', 'by', 'that', 'this', 'it']);
+    
+    // Etract and clean quey words
+    const queryWords = query
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(w=> w.length > 2 && !stopWords.has(w));
+
+    if (queryWords.length === 0) {
+        //Return clean chunk objects without mongoose metadata
+        return chunks.slice(0, maxChunks).map(chunk => ({
+            content: chunk.content,
+            chunkIndex: chunk.chunkIndex,
+            pageNumber: chunk.pageNumber,
+            _id: chunk._id
+        }));
+    }
+
+    const scoredChunks = chunks.map((chunk, index) => {
+        const content = chunk.content.toLowerCase();
+        const contentWords = content.split(/\s+/).length;
+        let score = 0;
+
+        //score each query word
+        for (const word of queryWords) {
+            //Extract word match (higher score)
+            const exactMatches = (content.match(new RegExp(`\\b${word}\\b`, 'g')) || []).length;
+            score += exactMatches * 3; // exact matches are weighted more
+
+            //Partial matches (lower score)
+            const partialMatches = (content.match(new RegExp(word, 'g')) || []).length;
+            score += Math.max(0, partialMatches - exactMatches)*1.5; // partial matches are weighted less
+        }
+
+        //Bonus multiple query words found
+        const uniqueWordsFound = queryWords.filter(word => content.includes(word)).length;
+        if (uniqueWordsFound > 1) {
+            score += uniqueWordsFound * 2; // bonus for multiple query words found
+        }
+        
+        //Normalize score by content length to avoid bias towards longer chunks
+        const normalizedScore = score / Math.sqrt(contentWords);
+
+        //small bonus for eaarlier chunks
+        const positionBonus = 1 - (index / chunks.length)*0.1; // earlier chunks get a small bonus
+
+        //return clean object without mongoose metadata
+        return {
+            content: chunk.content,
+            chunkIndex: chunk.chunkIndex,
+            pageNumber: chunk.pageNumber,
+            _id: chunk._id,
+            score: normalizedScore * positionBonus,
+            rawScore: score,
+            matchedWords: uniqueWordsFound
+        };
+    });
+
+    return scoredChunks
+    .filter(chunk => chunk.score > 0) // only keep chunks with a positive score
+    .sort((a, b) => {
+        if (b.score !== a.score) {
+            return b.score - a.score; // sort by score descending
+        }
+        if (b.matchedWords !== a.matchedWords) {
+            return b.matchedWords - a.matchedWords; // sort by matched words descending
+        }
+        return a.chunkIndex - b.chunkIndex; // sort by chunk index ascending    
+    })
+    .slice(0, maxChunks) // limit to maxChunks
+}
