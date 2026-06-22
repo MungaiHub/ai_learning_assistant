@@ -20,3 +20,16 @@ export const uploadDocument = async (req, res, next) => {
         next(error);
     }
 }
+
+// @desc Get all user documents
+// @route GET /api/documents
+// @access Private
+export const getDocuments = async (req, res) => {
+
+};
+// @desc Get a single document by ID
+// @route GET /api/documents/:id
+// @access Private
+export const getDocument = async (req, res) => {
+
+};
