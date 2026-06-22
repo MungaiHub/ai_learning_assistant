@@ -33,3 +33,17 @@ export const getDocuments = async (req, res) => {
 export const getDocument = async (req, res) => {
 
 };
+
+// @desc Delete a document by ID
+// @route DELETE /api/documents/:id
+// @access Private
+export const deleteDocument = async (req, res, next) => {
+
+};
+
+// @desc Update a document by ID
+// @route PUT /api/documents/:id
+// @access Private
+export const updateDocument = async (req, res, next) => {
+
+}
