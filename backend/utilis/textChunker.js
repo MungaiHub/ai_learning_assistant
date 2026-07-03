@@ -27,11 +27,11 @@ export const chunkText = (text, chunkSize = 500, overlap = 50) => {
     let chunkIndex = 0;
    
     for (const paragraph of paragraphs) {
-        const paragraphsWords = paragraph.trim().split(/\s+/);
-        const paragraphWordCount = paragraphsWords;
+        const paragraphWords = paragraph.trim().split(/\s+/);
+        const paragraphWordCount = paragraphWords.length;
 
         //if a single paragraph exceeds chunk size, split it by words
-        if (paragraphWordCount.length > chunkSize) {
+        if (paragraphWordCount > chunkSize) {
             if (currentChunk.length > 0) {
                 chunks.push({
                     content: currentChunk.join('\n\n'),
@@ -56,7 +56,7 @@ export const chunkText = (text, chunkSize = 500, overlap = 50) => {
         }
 
         //if adding this paragraph exceeds chunk size, save the current chunk
-        if (currentWordCount + paragraphWordCount.length > chunkSize && currentChunk.length > 0) {
+        if (currentWordCount + paragraphWordCount > chunkSize && currentChunk.length > 0) {
             chunks.push({
                 content: currentChunk.join('\n\n'),
                 chunkIndex: chunkIndex++,
@@ -69,11 +69,11 @@ export const chunkText = (text, chunkSize = 500, overlap = 50) => {
             const overlapText = prevWords.slice(-Math.min(overlap, prevWords.length)).join(' ');
 
             currentChunk = [overlapText, paragraph.trim()];
-            currentWordCount = overlapText.split(/\s+/).length + paragraphWordCount.length;
+            currentWordCount = overlapText.split(/\s+/).length + paragraphWordCount;
         }
         else {
             currentChunk.push(paragraph.trim());
-            currentWordCount += paragraphWordCount.length;
+            currentWordCount += paragraphWordCount;
         }
     }
 
