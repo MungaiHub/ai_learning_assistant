@@ -24,7 +24,7 @@ const documentSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-EtractedText: {
+extractedText: {
     type: String,
     default: ""
 },
@@ -54,7 +54,7 @@ lastAccessed: {
 },
 status: {
     type: String,
-    enum: ['processsing', 'ready', 'failed'],
+    enum: ['processing', 'ready', 'failed'],
     default: "processing"
 },
 }
