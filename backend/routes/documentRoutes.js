@@ -4,6 +4,7 @@ import { uploadDocument,
     getDocument,
     deleteDocument,
 } from '../controllers/documentControllers.js'
+import { getQuizzes } from '../controllers/quizControllers.js'
 import { protect } from '../middleware/auth.js'
 import upload from '../config/multer.js'
 
@@ -15,6 +16,7 @@ router.use(protect)
 
 router.post('/upload', upload.single('document'), uploadDocument)
 router.get('/', getDocuments)
+router.get('/:id/quizzes', getQuizzes)
 router.get('/:id', getDocument)
 router.delete('/:id', deleteDocument)
 
