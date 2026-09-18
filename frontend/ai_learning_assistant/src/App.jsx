@@ -1,24 +1,24 @@
-import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import LoginPage from './pages/LoginPage'
-import RegisterPage from './pages/RegisterPage'
+import LoginPage from './pages/Auth/LoginPage'
+import RegisterPage from './pages/Auth/RegisterPage'
 import NotFoundPage from './pages/NotFoundPage'
 import { Navigate } from 'react-router-dom'
-import DashboardPage from './pages/DashboardPage'
-import DocumentsListPage from './pages/DocumentsListPage'
-import DocumentsDetailPage from './pages/DocumentsDetailPage'
-import FlashcardsListPage from './pages/FlashcardsListPage'
-import FlashcardsDetailPage from './pages/FlashcardsDetailPage'
-import QuizTakePage from './pages/QuizTakePage'
-import QuizResultsPage from './pages/QuizResultsPage'
-import ProfilePage from './pages/ProfilePage'
-import ProtectedRoute from './componenets/auth/ProtectedRoute'      
+import DashboardPage from './pages/Dashboard/DashboardPage'
+import DocumentsListPage from './pages/Documents/DocumentListPage'
+import DocumentsDetailPage from './pages/Documents/DocumentDetailPage'
+import FlashcardsListPage from './pages/Flashcards/FlashcardListPage'
+import FlashcardsDetailPage from './pages/Flashcards/FlashcardPage'
+import QuizTakePage from './pages/Quizzes/QuizTakePage'
+import QuizResultsPage from './pages/Quizzes/QuizResultPage'
+import ProfilePage from './pages/Profile/ProfilePage'
+import ProtectedRoute from './componenets/auth/ProtectedRoute'
+import { useAuth } from './context/AuthContext'      
 
 
 
 const App = () => {
- const isAuthenticated = false; 
- const loading = false; 
+  
+  const { isAuthenticated, loading } = useAuth();
 
  if (loading) {
    return <div className='flex items-center justify-center h-screen'>Loading...</div>;
