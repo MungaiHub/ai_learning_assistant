@@ -14,7 +14,7 @@ export const protect = async (req, res, next) => {
       if (!req.user) {
         return res.status(401).json({
           success: false,
-          error: 'Not authorized, user not found',
+          error: 'Not authorized, user not found',     //Token is genuinely valid, but no matching user in the database
           statusCode: 401,
         })
       }
@@ -24,13 +24,13 @@ export const protect = async (req, res, next) => {
       console.error(error)
       return res.status(401).json({
         success: false,
-        error: 'Not authorized, token invalid',
+        error: 'Not authorized, token invalid',      //jwt.verify() throws an error
         statusCode: 401,
       })
     }
   } else {
     return res.status(401).json({
-      success: false,
+      success: false,                          //No Authorization header, or it doesn't start with Bearer
       error: 'Not authorized, no token',
       statusCode: 401,
     })
