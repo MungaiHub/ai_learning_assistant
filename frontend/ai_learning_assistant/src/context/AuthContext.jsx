@@ -1,6 +1,4 @@
-import {createContext, useState,useContext,useEffect} from 'react'
-
-
+import {createContext, useState, useContext, useEffect} from 'react'
 
 const AuthContext = createContext()
 
@@ -16,7 +14,6 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     const [loading, setLoading] = useState(true)
-
 
     useEffect(() => {
         checkAuthStatus()
@@ -51,11 +48,10 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('user')
         setUser(null)
         setIsAuthenticated(false)
-
         window.location.href = '/'  
     }
 
-     const updateUser = (updatedUserData) => {
+    const updateUser = (updatedUserData) => {
         const newUserData = { ...user, ...updatedUserData }
         localStorage.setItem('user', JSON.stringify(newUserData))
         setUser(newUserData)
