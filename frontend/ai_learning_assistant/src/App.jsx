@@ -1,4 +1,3 @@
-import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import LoginPage from './pages/Auth/LoginPage'
 import RegisterPage from './pages/Auth/RegisterPage'
@@ -12,13 +11,13 @@ import FlashcardsDetailPage from './pages/Flashcards/FlashcardPage'
 import QuizTakePage from './pages/Quizzes/QuizTakePage'
 import QuizResultsPage from './pages/Quizzes/QuizResultPage'
 import ProfilePage from './pages/Profile/ProfilePage'
-import ProtectedRoute from './componenets/auth/ProtectedRoute'      
-
+import ProtectedRoute from './componenets/auth/ProtectedRoute'
+import { useAuth } from './context/AuthContext'
 
 
 const App = () => {
- const isAuthenticated = false; 
- const loading = false; 
+
+  const { isAuthenticated, loading } = useAuth();
 
  if (loading) {
    return <div className='flex items-center justify-center h-screen'>Loading...</div>;
