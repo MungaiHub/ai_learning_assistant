@@ -1,4 +1,5 @@
 import {createContext, useState, useContext, useEffect} from 'react'
+import { isTokenExpired } from '../utilis/axiosIntance'
 
 const AuthContext = createContext()
 
@@ -23,14 +24,22 @@ export const AuthProvider = ({ children }) => {
         try {
             const token = localStorage.getItem('token')
             const userStr = localStorage.getItem('user')
-            if (token && userStr) {
+            if (token && userStr && !isTokenExpired(token)) {
                 const userData = JSON.parse(userStr)
                 setUser(userData)
                 setIsAuthenticated(true)
+            } else {
+                localStorage.removeItem('token')
+                localStorage.removeItem('user')
+                setUser(null)
+                setIsAuthenticated(false)
             }
         } catch (error) {
             console.error('Auth check failed:', error)
-            logout()
+            localStorage.removeItem('token')
+            localStorage.removeItem('user')
+            setUser(null)
+            setIsAuthenticated(false)
         } finally {
             setLoading(false)
         }

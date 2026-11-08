@@ -1,4 +1,4 @@
-export const BASE_URL = "http://localhost:8000";
+export const BASE_URL = "http://localhost:5000";
 
 export const API_PATHS = {
   AUTH: {
@@ -23,26 +23,26 @@ export const API_PATHS = {
     GENERATE_QUIZ: "/api/ai/generate-quiz",
     CHAT: "/api/ai/chat",
     EXPLAIN_CONCEPT: "/api/ai/explain-concept",
-    GET_CHAT_HISTORY: (documentId) => `api/ai/chat-history/${documentId}`,
+    GET_CHAT_HISTORY: (documentId) => `/api/ai/chat-history/${documentId}`,
   },
 
-    FLASHCARDS: {
-        GET_ALL_FLASHCARDS_SETS: "/api/flashcards",
-        GET_FLASHCARDS_FOR_DOC: (documentId) => `/api/flashcards/${documentId}`,
-        REVIEW_FLASHCARD: (cardId) => `/api/flashcards/${cardId}/review`,
-        TOGGLE_STAR: (cardId) => `/api/flashcards/${cardId}/star`,
-        DELETE_FLASHCARD_SET: (id) => `/api/flashcards/${id}`,
-    },
+  FLASHCARDS: {
+    GET_ALL_FLASHCARDS_SETS: "/api/flashcards",
+    GET_FLASHCARDS_FOR_DOC: (documentId) => `/api/flashcards/${documentId}`,
+    REVIEW_FLASHCARD: (cardId) => `/api/flashcards/${cardId}/review`,
+    TOGGLE_STAR: (cardId) => `/api/flashcards/${cardId}/star`,
+    DELETE_FLASHCARD_SET: (id) => `/api/flashcards/${id}`,
+  },
 
-    QUIZZES: {
-        GET_QUIZZES_FOR_DOC: (documentId) => `/api/quizzes/${documentId}`,
-        GET_QUIZ_BY_ID: (id) => `/api/quizzes/quiz/${id}`,
-        SUBMIT_QUIZ: (id) => `/api/quizzes/quiz/${id}/submit`,
-        GET_QUIZ_RESULTS: (id) => `/api/quizzes/quiz/${id}/results`,
-        DELETE_QUIZ: (id) => `/api/quizzes/quiz/${id}`,
-    },
+  QUIZZES: {
+    GET_QUIZZES_FOR_DOC: (documentId) => `/api/quizzes/${documentId}`,
+    GET_QUIZ_BY_ID: (id) => `/api/quizzes/quiz/${id}`,
+    SUBMIT_QUIZ: (id) => `/api/quizzes/quiz/${id}/submit`,
+    GET_QUIZ_RESULTS: (id) => `/api/quizzes/quiz/${id}/results`,
+    DELETE_QUIZ: (id) => `/api/quizzes/quiz/${id}`,
+  },
 
-    PROGRESS: {
-        GET_DASHBOARD: "/api/progress/dashboard",
-    },
+  PROGRESS: {
+    GET_DASHBOARD: "/api/progress/dashboard",
+  },
 };

@@ -21,11 +21,14 @@ const errorHandler = (err, req, res, next) => {
         message = 'Resource not found '
     }
 
-   //multer file size error
-    if (err.code === 'LIMIT_FILE_SIZE') {   
+   if (err.code === 'LIMIT_FILE_SIZE') {
         statusCode = 400
-        message = Object.values(err.errors).map(val => val.message).join(', ')      
+        message = 'File is too large. Maximum size is 10MB.'
+    }
 
+    if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+        statusCode = 400
+        message = 'Unexpected file field. Please upload a PDF using the document field.'
     }
 
     //Jwt errors

@@ -1,17 +1,17 @@
-import axiosInstance from "../utilis/axiosIntance";
-import {API_PATHS} from "../utilis/apiPaths";
+import axiosInstance, { toServiceError } from "../utilis/axiosIntance";
+import { API_PATHS } from "../utilis/apiPaths";
 
 const getDashboardData = async () => {
     try {
         const response = await axiosInstance.get(API_PATHS.PROGRESS.GET_DASHBOARD);
-        return response.data;
+        return response.data?.data || response.data;
     } catch (error) {
-        throw error.response?.data || { message: "Failed to fetch dashboard data." };
+        throw toServiceError(error, "Failed to fetch dashboard data.");
     }
 };
 
 const progressService = {
-    getDashboardData
+    getDashboardData,
 };
 
 export default progressService;

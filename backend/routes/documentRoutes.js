@@ -14,7 +14,14 @@ const router = express.Router()
 //All routes are protected
 router.use(protect)
 
-router.post('/upload', upload.single('document'), uploadDocument)
+router.post(
+    '/upload',
+    upload.fields([
+        { name: 'document', maxCount: 1 },
+        { name: 'file', maxCount: 1 },
+    ]),
+    uploadDocument
+)
 router.get('/', getDocuments)
 router.get('/:id/quizzes', getQuizzes)
 router.get('/:id', getDocument)

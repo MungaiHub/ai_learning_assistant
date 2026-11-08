@@ -10,8 +10,10 @@ import mongoose from 'mongoose';
 //@route POST /api/documents/upload
 //access Private
 export const uploadDocument = async (req, res, next) => {
+    const uploadedFile = req.file || req.files?.document?.[0] || req.files?.file?.[0];
+
     try {
-        if(!req.file){
+        if(!uploadedFile){
             return res.status(400).json({
                 success: false,
                 error: 'Please upload a PDF file',
@@ -23,7 +25,7 @@ export const uploadDocument = async (req, res, next) => {
 
         if(!title){
             //Delete uploaded file if no tittle is provided
-            await fs.unlink(req.file.path);
+            await fs.unlink(uploadedFile.path);
             return res.status(400).json({
                 success: false,
                 error: 'Please provide a title for the document',
@@ -33,20 +35,20 @@ export const uploadDocument = async (req, res, next) => {
 
         //construct the URL for the uploaded file
         const baseUrl = `http://localhost:${process.env.PORT || 8000}`;
-        const fileUrl = `${baseUrl}/uploads/documents/${req.file.filename}`;
+        const fileUrl = `${baseUrl}/uploads/documents/${uploadedFile.filename}`;
 
         //create a document record
         const document = await Document.create({
             userId: req.user._id,
             title,
             fileName: fileUrl,
-            filePath: req.file.path,
-            fileSize: req.file.size,
+            filePath: uploadedFile.path,
+            fileSize: uploadedFile.size,
             status: 'processing'
         });
 
         //process PDF in background (in producion, use a queue like Bull)
-        processPDF(document._id, req.file.path).catch(err => {
+        processPDF(document._id, uploadedFile.path).catch(err => {
             console.error('Error processing PDF:', err);
         });
 
@@ -57,8 +59,8 @@ export const uploadDocument = async (req, res, next) => {
         });
     }catch (error) {
         // clean up file on error
-        if (req.file) {
-            await fs.unlink(req.file.path).catch(() => {});
+        if (uploadedFile) {
+            await fs.unlink(uploadedFile.path).catch(() => {});
         }
         next(error);
     }
@@ -127,7 +129,7 @@ export const getDocuments = async (req, res, next) => {
         }
     },
     {
-        $sort: {uploadDocumentedAt: -1 }
+        $sort: { uploadDate: -1 }
     }
         ]);
 

@@ -1,18 +1,17 @@
-import axiosInstance from "../utilis/axiosIntance";
-import {API_PATHS} from "../utilis/apiPaths";
-
+import axiosInstance, { toServiceError } from "../utilis/axiosIntance";
+import { API_PATHS } from "../utilis/apiPaths";
 
 const login = async (email, password) => {
-  try {
-    const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, { 
-        email,
-         password });
-         return response.data;
+    try {
+        const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
+            email,
+            password,
+        });
+        return response.data;
     } catch (error) {
-        throw error.response?.data || { message: "An unknown error occurred." };
+        throw toServiceError(error, "An unknown error occurred.");
     }
 };
-
 
 const register = async (username, email, password) => {
     try {
@@ -23,7 +22,7 @@ const register = async (username, email, password) => {
         });
         return response.data;
     } catch (error) {
-        throw error.response?.data || { message: "An unknown error occurred." };
+        throw toServiceError(error, "An unknown error occurred.");
     }
 };
 
@@ -32,36 +31,34 @@ const getProfile = async () => {
         const response = await axiosInstance.get(API_PATHS.AUTH.GET_PROFILE);
         return response.data;
     } catch (error) {
-        throw error.response?.data || { message: "An unknown error occurred." };
+        throw toServiceError(error, "An unknown error occurred.");
     }
-}
-
+};
 
 const updateProfile = async (userData) => {
     try {
         const response = await axiosInstance.put(API_PATHS.AUTH.UPDATE_PROFILE, userData);
         return response.data;
     } catch (error) {
-        throw error.response?.data || { message: "An unknown error occurred." };
+        throw toServiceError(error, "An unknown error occurred.");
     }
 };
 
 const changePassword = async (passwords) => {
-    try{
+    try {
         const response = await axiosInstance.post(API_PATHS.AUTH.CHANGE_PASSWORD, passwords);
-        return response.data;   
+        return response.data;
+    } catch (error) {
+        throw toServiceError(error, "An unknown error occurred.");
     }
-    catch (error) {
-        throw error.response?.data || { message: "An unknown error occurred." };
-    }
-}
+};
 
 const authService = {
     login,
     register,
     getProfile,
     updateProfile,
-    changePassword
+    changePassword,
 };
 
 export default authService;

@@ -21,10 +21,12 @@ export const protect = async (req, res, next) => {
 
       next()
     } catch (error) {
-      console.error(error)
+      const expired = error.name === 'TokenExpiredError'
       return res.status(401).json({
         success: false,
-        error: 'Not authorized, token invalid',      //jwt.verify() throws an error
+        error: expired
+          ? 'Session expired. Please log in again.'
+          : 'Not authorized, token invalid',
         statusCode: 401,
       })
     }
